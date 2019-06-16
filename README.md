@@ -31,7 +31,7 @@ include 'RedisShardsException.php';
 ### Simple configuration
 Create object and configure it.
 ```
-$redis = new \davemodis\redis_shards\RedisShardsClient
+$redis = new \davemodis\redis_shards\RedisShardsClient();
 $redis->hostname = '127.0.0.1';
 ```
 
