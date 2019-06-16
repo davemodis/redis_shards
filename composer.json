@@ -12,6 +12,11 @@
             "role": "Developer"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "davemodis\\redis_shards\\": "src"
+        }
+    },
     "require": {
         "php": "^7.0"
     }
