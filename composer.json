@@ -3,7 +3,7 @@
     "description": "Redis Client with sharding and support MGET, MSET, KEYS and Pipeline",
     "keywords": ["redis","shard","sharding","pipeline"],
     "homepage": "https://github.com/davemodis/redis_shards",
-    "licanse": "MIT",
+    "license": "MIT",
     "authors": [
         {
             "name": "Dave Modis",

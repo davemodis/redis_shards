@@ -1,16 +1,19 @@
 # Redis Shards Clent
-Redis client based on Yii2 Redis Connector.
-Extends functional to use many redis servers as one (sharding) and support MGET, MSET, KEYS, Pipeline. 
+Redis client based on Yii2 Redis Connector. Extends functional to use few redis servers as one (sharding) and support MGET, MSET, KEYS, Pipeline. 
 From original Yii class removed events.
 
 ### How sharding works
 The server (shard) is selected depending on the key. If the key contains digits at the end, they are used to select the shard, otherwise the key is converted into a number by the hash function CRC32. Then we take the remainder of dividing this number by the number of servers and get the shard number.
-
 It can be useful if you use keys like `user:[id]`. For example, if you have 3 shards and you need to know on which of it stored user 123 you find it with `123 % 3 = 0`. 0 is index of shard.
 
-MGET, MSET, KEYS and Pipeline works transporently in this mode: each shard will get only its keys.
+### Features
+**MGET, MSET, KEYS and Pipeline** works transporently: each shard will get only its keys.
+MGET, MSET, KEYS separates all keys by packs for their shards, and then send requests. One shard - one request.
 
-MGET, MSET, KEYS separate all key on parts equal count of shards, and send its.
+You can delay reading response from Redis. [Learn more about Pipeline on Redis.io](https://redis.io/topics/pipelining).
+In sharding mode pipeline works the same as usual. 
+When you start Pipeline mode `$redis->pipelineStart();`, client don't read response from Redis. When you end Pipeline mode `$redis->pipelineEnd();` client read all responses of each requests made in Pipeline mode.
+If you don't need to read responses (for economy reason) you can just close sockets by `$redis->close();`
 
 ## Installation
 ### Composer installation
