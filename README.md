@@ -12,6 +12,7 @@ MGET, MSET, KEYS and Pipeline works transporently in this mode: each shard will 
 
 MGET, MSET, KEYS separate all key on parts equal count of shards, and send its.
 
+## Installation
 ### Composer installation
 `composer require davemodis/redis_shards`
 
@@ -23,6 +24,7 @@ include 'RedisShardsClient.php';
 include 'RedisShardsException.php';
 ```
 
+## Configuration
 ### Simple configuration
 Create object and configure it.
 ```
