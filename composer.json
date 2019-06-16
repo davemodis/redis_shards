@@ -1,0 +1,18 @@
+{
+    "name": "davemodis/redis_shards",
+    "description": "Redis Client with sharding and support MGET, MSET, KEYS and Pipeline",
+    "keywords": ["redis","shard","sharding","pipeline",],
+    "homepage": "https://github.com/davemodis/redis_shards",
+    "licanse": "MIT",
+    "authors": [
+        {
+            "name": "Dave Modis",
+            "email": "dumbashable@gmail.com",
+            "homepage": "https://surfe.be",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.0"
+    }
+}
