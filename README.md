@@ -46,6 +46,46 @@ $redis->password = [null,'StrOngPassw0rd!!1'];
 $redis->database = [0,0];
 ```
 
-
 ### Yii2 configuration
+```
+'components' => [
+    'redis' => [
+        'class'         => 'davemodis\redis_shards\RedisShardsClient',
+        'hostname'      => ['127.0.0.1','127.0.0.2'],
+        'port'          => [6379,6379],
+        'password'      => [null,'StrOngPassw0rd!!1'],
+        'database'      => [0,0],
+    ],
+]
+```
+> NOTICE: You can't use this class in Yii2 to Cache or Session.
+> Add one more redis component in Yii2 config with 
+> yii\redis\Connection class to use in Cache and Session.
 
+```
+'components' => [
+    'redis' => [
+        'class'         => 'davemodis\redis_shards\RedisShardsClient',
+        'hostname'      => ['127.0.0.1','127.0.0.2'],
+        'port'          => [6379,6379],
+        'password'      => [null,'StrOngPassw0rd!!1'],
+        'database'      => [0,0],
+    ],
+    'redis_yiicache' => [
+        'class'         => 'yii\redis\Connection',
+        'hostname'      => '127.0.0.2',
+        'port'          => 6379,
+        'password'      => 'StrOngPassw0rd!!1',
+        'database'      => 0,
+    ],
+    'cache' => [
+        'class' => 'yii\redis\Cache',
+        'redis' => 'redis_yiicache',
+    ],
+    'session' => [
+        'class' => 'yii\redis\Session',
+        'redis' => 'redis_yiicache',
+        'timeout' => 86400*30,
+    ],
+]
+```
