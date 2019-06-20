@@ -1,4 +1,4 @@
-# Redis Shards Clent
+# Redis Shards Client
 Redis client based on Yii2 Redis Connector. Extends functional to use few redis servers as one (sharding) and support MGET, MSET, KEYS, Pipeline. 
 From original Yii class removed events.
 
