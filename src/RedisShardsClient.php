@@ -778,7 +778,7 @@ class RedisShardsClient
     /**
      * Implement DEL with many keys request to shards.
      * @param array $keys Array of keys to del
-     * @return bool Return true on finish
+     * @return int Return count of deleted keys
      */
     private function _del($keys)
     {
@@ -801,14 +801,14 @@ class RedisShardsClient
             $srvs[$s][] = $keys[$k];
         }
       
-
+        $deleted = 0;
         foreach ($srvs as $sn => $v) {
             if(!empty($v)) {
-                $this->executeCommand('DEL',$v,$sn);
+                $deleted += $this->executeCommand('DEL',$v,$sn);
             }
         }
 
-        return true;
+        return $deleted;
     }
 
     /**
