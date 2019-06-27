@@ -493,15 +493,19 @@ class RedisShardsClient
         if( count($this->hostname) > 1 )
         {
 
-            if($name === 'MGET' && $index < 0)
+            if(strtoupper($name) === 'MGET' && $index < 0)
                 return $this->_mget($params);
 
 
-            if($name === 'MSET' && $index < 0)
+            if(strtoupper($name) === 'MSET' && $index < 0)
                 return $this->_mset($params);
 
 
-            if($name === 'KEYS' && $index < 0)
+            if(strtoupper($name) === 'DEL' && $index < 0 && count($params) > 1)
+                return $this->_del($params);
+
+
+            if(strtoupper($name) === 'KEYS' && $index < 0)
             {
                 $arr = [];
                 for($i = 0; $i < count($this->hostname); ++$i)
@@ -765,6 +769,42 @@ class RedisShardsClient
                 }
 
                 $this->executeCommand('MSET',$values,$sn);
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Implement DEL with many keys request to shards.
+     * @param array $keys Array of keys to del
+     * @return bool Return true on finish
+     */
+    private function _del($keys)
+    {
+        $REDIS_CNT = count($this->hostname);
+        $srv = [];
+
+        if(count($keys) === 1 && is_array($keys[0])) {
+            $keys = $keys[0];
+        }
+
+        // определяем нужный сервер по последним цифрам ключа
+        // или по числовому представленю строки
+        foreach ($keys as $k) {
+            $srv[] = $this->getServerByKey($k);
+        }
+
+        $srvs = array_pad(array(), $REDIS_CNT, array());
+
+        foreach ($srv as $k => $s) {
+            $srvs[$s][] = $keys[$k];
+        }
+      
+
+        foreach ($srvs as $sn => $v) {
+            if(!empty($v)) {
+                $this->executeCommand('DEL',$v,$sn);
             }
         }
 
