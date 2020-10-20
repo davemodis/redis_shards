@@ -782,23 +782,15 @@ class RedisShardsClient
      */
     private function _del($keys)
     {
-        $REDIS_CNT = count($this->hostname);
-        $srv = [];
 
         if(count($keys) === 1 && is_array($keys[0])) {
             $keys = $keys[0];
         }
 
-        // определяем нужный сервер по последним цифрам ключа
-        // или по числовому представленю строки
+        $srvs = array_pad(array(), count($this->hostname), array());
+
         foreach ($keys as $k) {
-            $srv[] = $this->getServerByKey($k);
-        }
-
-        $srvs = array_pad(array(), $REDIS_CNT, array());
-
-        foreach ($srv as $k => $s) {
-            $srvs[$s][] = $keys[$k];
+            $srvs[$this->getServerByKey($k)][] = $k;
         }
       
         $deleted = 0;
