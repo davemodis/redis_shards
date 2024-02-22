@@ -526,7 +526,21 @@ class RedisShardsClient
             }
 
             $index = $index < 0 ? $this->getServerByKey( $key ) : $index;
-            $this->open( $index );
+                
+            if ($this->retries > 0) {
+                $tries = $this->retries;
+                while ($tries-- > 0) {
+                    try {
+                        $this->open( $index );
+                    } catch (RedisShardsException $e) {
+                        if ($tries == 0) {
+                            $this->logger($e, __METHOD__, true);
+                        }
+                    }
+                }
+            } else {
+                $this->open( $index );
+            }
 
             if($this->_pipeline) {
                 $this->_pipeline_order[] = $index;
@@ -555,7 +569,7 @@ class RedisShardsClient
                     $retries = $this->retries;
                     $this->retries = 0;
                     $this->close();
-                    $this->open();
+                    $this->open($index > 0 ? $index : 0);
                     $this->retries = $retries;
                 }
             }
